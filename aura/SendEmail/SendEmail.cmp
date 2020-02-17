@@ -1,0 +1,27 @@
+<aura:component description="SendEmail" controller="SendEmailController">
+    <aura:attribute name="showHideTable" type="Boolean" default="true"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+
+    <div class="mainClass slds-grid slds-grid--vertical slds-align--absolute-center">
+        <div class="header slds-col slds-size_1-of-1 slds-align--absolute-center">
+            <lightning:button class="slds-button" label="SEND EMAIL" title="Show/Hide builder"
+                              onclick="{!c.showHideSentEmailTable }"/>
+        </div>
+
+        <aura:if isTrue="{!v.showHideTable}">
+            <div class="slds-col slds-size_1-of-1">
+                <c:SendEmailTable/>
+            </div>
+        </aura:if>
+
+        <div class="slds-col slds-size_1-of-1">
+            <div class="slds-grid  slds-align--absolute-center">
+                <lightning:button class="add" variant="brand" label="ADD" onclick="{!c.openPopup}"/>
+            </div>
+        </div>
+        <c:SendEmailPopup
+                aura:id="Popup"
+                isOpen = "{!v.isOpen}"
+        />
+    </div>
+</aura:component>

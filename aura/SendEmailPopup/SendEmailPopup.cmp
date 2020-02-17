@@ -1,0 +1,114 @@
+<aura:component description="SendEmailPopup" controller="SendEmailController">
+    <aura:registerEvent name="refreshTableEvent" type="c:SendEmailRefreshTableEvent"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="isOpenDetail" type="boolean" default="false"/>
+    <aura:attribute name="findTemplate" type="Object"/>
+    <aura:attribute name="record" type="Object"/>
+
+    <aura:attribute name="objectNames" type="String[]"/>
+    <aura:attribute name="fieldNames" type="String"/>
+    <aura:attribute name="templateNames" type="Object"/>
+
+    <aura:attribute name="selectObject" type="String"/>
+    <aura:attribute name="selectField" type="String"/>
+    <aura:attribute name="selectTemplate" type="String"/>
+    <aura:attribute name="selectCriterion" type="String"/>
+
+    <aura:attribute name="renderTable" type="Boolean" default="true"/>
+
+    <aura:handler name="init" value="{! this}" action="{!c.init}"/>
+
+    <div class="slds-m-around_xx-large" style="min-width: 40rem">
+        <aura:if isTrue="{!v.isOpen}">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                     aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal--large">
+                <div class="slds-modal__container slds-modal--large" style="width: 50%">
+
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <div class="slds-grid slds-align--absolute-center">
+                            <h1>Create Send Email Job</h1>
+                        </div>
+                    </header>
+
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div class="slds-col slds-size_1-of-1">
+                            <div class="slds-grid  slds-align--absolute-center"
+                                 style="justify-content: space-evenly;">
+                                <lightning:select name="selectObjects"
+                                                  label="Select the Objects Names"
+                                                  value="{!v.selectObject}"
+                                                  onchange="{!c.showFieldsPickList}"
+                                                  required="true">
+                                    <aura:iteration items="{!v.objectNames}" var="item">
+                                        <option text="{!item}" selected="{!item == ''}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+
+                                <lightning:select name="selectFields"
+                                                  label="Select the Fields:"
+                                                  value="{!v.selectField}"
+                                                  required="true">
+                                    <aura:iteration items="{!v.fieldNames}" var="item">
+                                        <option text="{!item.label}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+
+                                <lightning:select name="selectCriterion"
+                                                  label="Select the Criterion:"
+                                                  value="{!v.selectCriterion}"
+                                                  required="true">
+                                    <option value=""></option>
+                                    <option value="Every year">Every year</option>
+                                    <option value="Every month">Every month</option>
+                                    <option value="Every day">Every day</option>
+                                    <option value="Now">Now</option>
+                                </lightning:select>
+
+                                <lightning:select name="selectTemplates"
+                                                  label="Select the Template:"
+                                                  value="{!v.selectTemplate}"
+                                                  required="true">
+
+                                    <aura:iteration items="{!v.templateNames}" var="item">
+                                        <option text="{!item.Name}" selected="selected"></option>
+                                    </aura:iteration>
+
+                                </lightning:select>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <footer class="slds-modal__footer slds-text-align--center">
+                        <lightning:button variant="neutral"
+                                          label="Preview Template "
+                                          title="Cancel"
+                                          onclick="{! c.showDetailTemplate }"
+                                          class="snowDetailButton"/>
+                        <lightning:button variant="neutral"
+                                          label="Save"
+                                          title="Save"
+                                          onclick="{! c.saveModel }"/>
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModel }"/>
+
+
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+    </div>
+    <c:SendEmailShowDetailPopup
+            aura:id="PopupDetail"
+            isOpen="{!v.isOpenDetail}"
+            template="{!v.findTemplate}"
+    />
+</aura:component>

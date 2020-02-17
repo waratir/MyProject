@@ -1,0 +1,39 @@
+.THIS .firstColumn {
+    font-size: 5px;
+}
+
+.THIS .firstColumn > div {
+    font-size: 15px;
+}
+
+.THIS .SecondColumn {
+    font-size: 5px;
+}
+
+.THIS .SecondColumn > div {
+    font-size: 15px;
+}
+
+.THIS .EmployeeName {
+    font-weight: 800;
+    font-size: 20px;
+    font-family: "Сomic Sans MS", cursive;
+    text-align: left;
+    padding-left: 25px;
+}
+
+.THIS .image {
+    width: 100px;
+    height: 100px;
+
+}
+
+.THIS h1 {
+    font-weight: 500;
+    font-size: 3em;
+    color: rgb(0, 112, 210);
+}
+
+.THIS .snowDetailButton {
+
+}

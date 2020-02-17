@@ -1,0 +1,19 @@
+
+.THIS.mainClass {
+    width: 1500px;
+}
+
+.THIS .header {
+    background-color: #1B5297 !important;
+    /*font-size: 30px;*/
+    font: 30px 'Open Sans', Arial, Helvetica, Verdana, sans-serif;
+    color: #fffb05 !important;
+    text-decoration: none;
+    min-width: auto;
+    margin: auto;
+    height: 50px
+}
+
+.THIS .add {
+    margin-top: 22px;
+}
