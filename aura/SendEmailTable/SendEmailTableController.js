@@ -6,10 +6,8 @@
                      {label: 'Criteria', fieldName: 'Criterion__c', sortable: true},
                      {label: 'Email Template', fieldName: 'Email_Template_Name__c', sortable: true}
         );
-        console.log(1);
 
         component.set('v.columns', columns);
-        console.log(2);
         helper.getObjectRecords(component, helper);
     },
 

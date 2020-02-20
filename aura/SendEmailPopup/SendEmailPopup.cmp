@@ -5,7 +5,7 @@
     <aura:attribute name="findTemplate" type="Object"/>
     <aura:attribute name="record" type="Object"/>
 
-    <aura:attribute name="objectNames" type="String[]"/>
+    <aura:attribute name="objectNames" type="Object"/>
     <aura:attribute name="fieldNames" type="String"/>
     <aura:attribute name="templateNames" type="Object"/>
 
@@ -45,7 +45,7 @@
                                                   onchange="{!c.showFieldsPickList}"
                                                   required="true">
                                     <aura:iteration items="{!v.objectNames}" var="item">
-                                        <option text="{!item}" selected="{!item == ''}"></option>
+                                        <option text="{!item.label}" selected="{!item.label == ''}"></option>
                                     </aura:iteration>
                                 </lightning:select>
 
@@ -75,7 +75,7 @@
                                                   required="true">
 
                                     <aura:iteration items="{!v.templateNames}" var="item">
-                                        <option text="{!item.Name}" selected="selected"></option>
+                                        <option text="{!item.Name}" selected="{!item.Name == ''}"></option>
                                     </aura:iteration>
 
                                 </lightning:select>

@@ -1,10 +1,24 @@
 public with sharing class SendEmailController {
     @AuraEnabled
-    public static List<String> getObjectNames() {
-        List<String> names = new List<String>{
-                '', 'Contact', 'User', 'Account', 'Opportunity'
-        };
-        return names;
+    public static List<Map<String, String>> getObjectNames() {
+        List<Map<String, String>> options = new List<Map<String, String>>();
+
+        List<String> standardObjects = new List<String>{'Contact', 'Account', 'Opportunity'};
+
+        Map<String, SObjectType> objs = Schema.getGlobalDescribe();
+        for (String key : objs.keySet()) {
+            if (objs.get(key).getDescribe().isCustom() || standardObjects.contains(objs.get(key).getDescribe().getName())) {
+                if (checkTypeFields(objs.get(key).getDescribe().getName()) ) {
+                    options.add(new Map<String, String>{
+                            'label' => objs.get(key).getDescribe().getName(), 'value' => key
+                    });
+                }
+            }
+        }
+        options.add(new Map<String, String>{
+                'label' => '', 'value' => ''
+        });
+        return options;
     }
 
     @AuraEnabled
@@ -16,16 +30,15 @@ public with sharing class SendEmailController {
 
         Map<String, SObjectField> fields = new Map<String, SObjectField>(Schema.getGlobalDescribe().get(selectedObject).getDescribe().fields.getMap());
         Set<String> fieldSet = fields.keySet();
-        for (String s : fieldSet) {
-            SObjectField fieldToken = fields.get(s);
+        for (String item : fieldSet) {
+            SObjectField fieldToken = fields.get(item);
             DescribeFieldResult selectedField = fieldToken.getDescribe();
-            if (selectedField.isAccessible()) {
-                if (String.valueOf(selectedField.getType()) == 'Date') {
+            if (selectedField.isAccessible() && selectedField.isCustom()) {
+                if (String.valueOf(selectedField.getType()) == 'Date' || String.valueOf(selectedField.getType()) == 'DateTime') {
                     options.add(new Map<String, String>{
                             'label' => selectedField.getName().capitalize(), 'value' => String.valueOf(selectedField.getType())
                     });
                 }
-
             }
         }
         return options;
@@ -47,5 +60,20 @@ public with sharing class SendEmailController {
     public static void saveData(String selectedObject, String selectField, String selectCriterion, String selectTemplate) {
         sendEmailControll__c record = new sendEmailControll__c(Object_Name__c = selectedObject, Data_field__c = selectField, Criterion__c = selectCriterion, Email_Template_Name__c = selectTemplate);
         insert record;
+    }
+
+    public static Boolean checkTypeFields(String objectName) {
+        Map<String, SObjectField> fields = new Map<String, SObjectField>(Schema.getGlobalDescribe().get(objectName).getDescribe().fields.getMap());
+        Set<String> fieldSet = fields.keySet();
+        for (String item : fieldSet) {
+            SObjectField fieldToken = fields.get(item);
+            DescribeFieldResult selectedField = fieldToken.getDescribe();
+            if (selectedField.isAccessible() && selectedField.isCustom()) {
+                if (String.valueOf(selectedField.getType()) == 'Date' || String.valueOf(selectedField.getType()) == 'DateTime') {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

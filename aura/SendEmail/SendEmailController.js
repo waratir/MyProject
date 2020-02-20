@@ -1,10 +1,6 @@
 ({
     showHideSentEmailTable: function (component, event, helper) {
-        if (component.get('v.showHideTable')) {
-            component.set('v.showHideTable', false);
-        } else {
-            component.set('v.showHideTable', true);
-        }
+        component.set('v.showHideTable', component.get('v.showHideTable') !== true);
     },
 
     openPopup: function (component, event, helper) {

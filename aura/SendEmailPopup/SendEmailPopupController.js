@@ -18,7 +18,6 @@
     showDetailTemplate: function (component, event, helper) {
         let templates = component.get('v.templateNames');
 
-
         let filtr = templates.filter(function (e) {
             return e.Name === component.get('v.selectTemplate');
         });

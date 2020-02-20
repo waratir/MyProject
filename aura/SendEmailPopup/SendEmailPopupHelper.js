@@ -4,10 +4,17 @@
         action1.setCallback(this, $A.getCallback(function (response) {
             let state = response.getState();
             if (state === "SUCCESS") {
-                let sortField = response.getReturnValue();
-                component.set('v.objectNames', sortField.sort());
+                let objects = response.getReturnValue();
+                component.set('v.objectNames', objects.sort(this.sortFunction('label')));
             } else if (state === "ERROR") {
-                alert("WARNING!!!! Check Object");
+                let errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.showToast(errors[0].message)
+                    }
+                } else {
+                    this.showToast('Unknown error')
+                }
             }
         }));
         $A.enqueueAction(action1);
@@ -19,9 +26,16 @@
                 component.set('v.templateNames', response.getReturnValue());
                 let temp = component.get('v.templateNames');
                 temp.push({Name: ' ', Body: ' ', selected: true});
-                component.set('v.templateNames', temp);
+                component.set('v.templateNames', temp.sort(this.sortFunction('Name')));
             } else if (state === "ERROR") {
-                alert("WARNING!!!! Check Template");
+                let errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.showToast(errors[0].message)
+                    }
+                } else {
+                    this.showToast('Unknown error')
+                }
             }
         }));
         $A.enqueueAction(action2);
@@ -34,19 +48,16 @@
             let state = response.getState();
             if (state === "SUCCESS") {
                 let sortField = response.getReturnValue();
-                sortField.sort(function (a, b) {
-                    if (a.label > b.label) {
-                        return 1;
-                    }
-                    if (a.label < b.label) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                component.set('v.fieldNames', sortField);
-
+                component.set('v.fieldNames', sortField.sort(this.sortFunction('label')));
             } else if (state === "ERROR") {
-                alert("WARNING!!!! Check Fields");
+                let errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.showToast(errors[0].message)
+                    }
+                } else {
+                    this.showToast('Unknown error')
+                }
             }
         }));
         $A.enqueueAction(action);
@@ -54,10 +65,6 @@
 
     saveDataToBase: function (component, event, helper) {
         let action = component.get('c.saveData');
-        console.log(component.get('v.selectObject'));
-        console.log(component.get('v.selectField'));
-        console.log(component.get('v.selectCriterion'));
-        console.log(component.get('v.selectTemplate'));
         action.setParams(
             {
                 selectedObject: component.get('v.selectObject'),
@@ -77,25 +84,50 @@
                 let appEvent = $A.get("e.c:SendEmailRefreshTableEvent");
                 appEvent.fire();
             } else if (state === "ERROR") {
-                alert("WARNING!!!! Check data");
+                let errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.showToast(errors[0].message)
+                    }
+                } else {
+                    this.showToast('Unknown error')
+                }
             }
         }));
         $A.enqueueAction(action);
 
+    },
+
+    sortFunction: function (key) {
+        let order = 'asc';
+        return function innerSort(a, b) {
+            if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+                return 0;
+            }
+            const varA = (typeof a[key] === 'string')
+                ? a[key].toUpperCase() : a[key];
+            const varB = (typeof b[key] === 'string')
+                ? b[key].toUpperCase() : b[key];
+
+            let comparison = 0;
+            if (varA > varB) {
+                comparison = 1;
+            } else if (varA < varB) {
+                comparison = -1;
+            }
+            return (
+                (order === 'desc') ? (comparison * -1) : comparison
+            );
+        };
+    },
+
+    showToast : function(errorMessage) {
+        let toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title": "Success!",
+            "message": errorMessage
+        });
+        toastEvent.fire();
     }
-    // sortFunction: function (sortItem) {
-    //     console.log(sortItem);
-    //     let sortOption = sortItem;
-    //     sortOption.sort(function (a, b) {
-    //         if (a.Name > b.Name) {
-    //             return 1;
-    //         }
-    //         if (a.Name < b.Name) {
-    //             return -1;
-    //         }
-    //         return 0;
-    //     });
-    //     console.log(sortOption);
-    //     return sortOption;
-    // }
+
 });
