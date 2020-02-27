@@ -8,6 +8,7 @@
             {label: 'Email Template', fieldName: 'Email_Template_Name__c', sortable: true},
             {
                 type: 'button',
+                cellAttributes: {alignment: 'right'},
                 typeAttributes:
                     {
                         label: 'Preview',
@@ -18,7 +19,6 @@
                     }
             }
         );
-
         component.set('v.columns', columns);
         helper.getObjectRecords(component, helper);
     },
@@ -69,11 +69,8 @@
         component.set("v.isOpen", true);
         let action = event.getParam('action');
         let row = event.getParam('row');
-        console.log(row);
-        switch (action.name) {
-            case 'previewRecords':
-                helper.getRecordForPreview(component, row);
-                break;
+        if (action.name === 'previewRecords') {
+            helper.getRecordForPreview(component, row);
         }
     },
 

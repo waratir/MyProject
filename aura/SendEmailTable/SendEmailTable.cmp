@@ -19,6 +19,11 @@
     <aura:handler name="init" value="{! this}" action="{!c.init}"/>
     <aura:handler event="c:SendEmailRefreshTableEvent" action="{!c.refreshTable}"/>
 
+    <c:SendEmailPreviewPopup
+            aura:id="PreviewPopup"
+            isOpen="{!v.isOpen}"
+            data="{!v.recordForPreview}"
+    />
 
     <div class="slds-grid slds-size_1-of-1 slds-align-content-center">
         <lightning:layout multipleRows="true" horizontalAlign="center">
@@ -67,9 +72,5 @@
         </lightning:layout>
 
     </div>
-    <c:SendEmailPreviewPopup
-            aura:id="PreviewPopup"
-            isOpen="{!v.isOpen}"
-            data="{!v.recordForPreview}"
-    />
+
 </aura:component>

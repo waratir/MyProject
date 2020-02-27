@@ -5,7 +5,6 @@
 
     <aura:handler name="init" value="{! this}" action="{!c.init}"/>
 
-    <div class="slds-m-around_xx-large" style="min-width: 40rem">
         <aura:if isTrue="{!v.isOpen}">
             <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                      aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal--large">
@@ -50,6 +49,5 @@
             </section>
             <div class="slds-backdrop slds-backdrop_open"></div>
         </aura:if>
-    </div>
 
 </aura:component>

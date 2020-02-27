@@ -86,7 +86,6 @@
 
     getRecordForPreview: function (component, row) {
         let action = component.get('c.getRecordsForPreview');
-        console.log('row.Criterion__c  ' + row.Criterion__c);
         action.setParams({
             fieldDate: row.Data_field__c,
             objectName: row.Object_Name__c,
@@ -97,7 +96,6 @@
             let state = response.getState();
             if (state === "SUCCESS") {
                 component.set('v.recordForPreview', response.getReturnValue());
-                console.log(component.get('v.recordForPreview'));
             } else if (state === "ERROR") {
                 console.log('Error');
             }

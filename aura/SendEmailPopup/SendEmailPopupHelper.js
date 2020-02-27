@@ -8,6 +8,8 @@
                 component.set('v.objectNames', objects.sort(this.sortFunction('label')));
             } else if (state === "ERROR") {
                 let errors = response.getError();
+
+
                 if (errors) {
                     if (errors[0] && errors[0].message) {
                         this.showToast(errors[0].message)

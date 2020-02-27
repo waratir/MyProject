@@ -5,7 +5,7 @@ global with sharing class SendEmailBatch implements Database.Batchable<SObject> 
 
     global void execute(Database.BatchableContext BC, List<sendEmailControll__c> objects) {
         for (sendEmailControll__c item : objects) {
-            SendEmailBatch2 batch = new SendEmailBatch2(item.Object_Name__c, item.Data_field__c, item.Criterion__c);
+            SendEmailBatch2 batch = new SendEmailBatch2(item.Object_Name__c, item.Data_field__c, item.Criterion__c, item.Email_Template_Name__c);
             Database.executeBatch(batch);
 
 //            if (item.Criterion__c == 'Send Email on Birthday') {

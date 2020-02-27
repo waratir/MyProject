@@ -66,7 +66,8 @@ public with sharing class SendEmailController {
 
     @AuraEnabled
     public static List<SObject> getRecordsForPreview(String fieldDate, String objectName, String criteria) {
-        return PreviewRecords.getRecordsForPreview(fieldDate, objectName, criteria);
+        List<SObject> listSObjects = Database.query('SELECT FirstName, LastName, ' + fieldDate + ' FROM ' + objectName);
+        return PreviewRecords.getRecordsForPreview(listSObjects, fieldDate, criteria);
     }
 
     public static Boolean checkTypeFields(String objectName) {

@@ -1,26 +1,33 @@
 public with sharing class PreviewRecords {
 
-    public static List<SObject> getRecordsForPreview(String fieldDate, String objectName, String criteria) {
+    public static List<SObject> getRecordsForPreview(List<SObject> listSObjects, String fieldDate, String criteria) {
+
         if (criteria == 'Every year') {
-            List<SObject> listSObjects = Database.query('SELECT FirstName, LastName, ' + fieldDate + ' FROM ' + objectName + ' WHERE ' + fieldDate + ' = TODAY');
-            return listSObjects;
-        }
-        if (criteria == 'Every month') {
-            List<String> listId = new List<String>();
-            AggregateResult[] results = Database.query('SELECT Id, DAY_IN_MONTH(' + fieldDate + ') FROM ' + objectName + ' GROUP BY Id, ' + fieldDate);
-            for (AggregateResult item : results) {
-                if (item.get('expr0') == System.now().day()) {
-                    listId.add(String.valueOf(item.get('Id')));
+            List<SObject> result = new List<SObject>();
+            for (SObject item : listSObjects) {
+                System.debug('item.get(fieldDate) ' + item.get(fieldDate));
+                System.debug('Date.today() ' + Date.today());
+                if (item.get(fieldDate) != null) {
+                    if (Date.valueOf(item.get(fieldDate)).day() == Date.today().day() && Date.valueOf(item.get(fieldDate)).month() == Date.today().month()) {
+                        result.add(item);
+                    }
                 }
             }
-            System.debug(listId);
-            List<SObject> listSObjects = Database.query('SELECT Id, FirstName, LastName, ' + fieldDate + ' FROM ' + objectName + ' WHERE Id IN :listId');
-            return listSObjects;
+            return result;
+        }
+        if (criteria == 'Every month') {
+            List<SObject> result = new List<SObject>();
+            for (SObject item : listSObjects) {
+                if (item.get(fieldDate) != null) {
+                    Integer dateField = Date.valueOf(item.get(fieldDate)).day();
+                    if (dateField == System.now().day() || dateField > Date.daysInMonth(System.now().year(), System.now().month())) {
+                        result.add(item);
+                    }
+                }
+            }
+            return result;
         }
         return null;
     }
 
-    public static List<SObject> getRecordsForBatch(Date fieldDate, String criteria) {
-        return null;
-    }
 }
