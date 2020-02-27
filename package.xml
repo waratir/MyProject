@@ -17,9 +17,5 @@
         <members>SendEmailTable</members>
         <name>AuraDefinitionBundle</name>
     </types>
-    <types>
-        <members>sendEmailControll__c</members>
-        <name>CustomObject</name>
-    </types>
     <version>47.0</version>
 </Package>

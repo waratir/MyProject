@@ -1,10 +1,22 @@
 ({
     init: function (component, event, helper) {
         let columns = [];
-        columns.push({label: 'Object Name', fieldName: 'Object_Name__c', sortable: true},
-                     {label: 'Data field', fieldName: 'Data_field__c', sortable: true},
-                     {label: 'Criteria', fieldName: 'Criterion__c', sortable: true},
-                     {label: 'Email Template', fieldName: 'Email_Template_Name__c', sortable: true}
+        columns.push(
+            {label: 'Object Name', fieldName: 'Object_Name__c', sortable: true},
+            {label: 'Data field', fieldName: 'Data_field__c', sortable: true},
+            {label: 'Criteria', fieldName: 'Criterion__c', sortable: true},
+            {label: 'Email Template', fieldName: 'Email_Template_Name__c', sortable: true},
+            {
+                type: 'button',
+                typeAttributes:
+                    {
+                        label: 'Preview',
+                        name: 'previewRecords',
+                        title: 'previewTittle',
+                        disabled: false,
+                        value: 'test'
+                    }
+            }
         );
 
         component.set('v.columns', columns);
@@ -52,4 +64,17 @@
         component.set("v.currentPageNumber", component.get("v.totalPages"));
         helper.buildData(component, helper);
     },
+
+    previewRecord: function (component, event, helper) {
+        component.set("v.isOpen", true);
+        let action = event.getParam('action');
+        let row = event.getParam('row');
+        console.log(row);
+        switch (action.name) {
+            case 'previewRecords':
+                helper.getRecordForPreview(component, row);
+                break;
+        }
+    },
+
 });

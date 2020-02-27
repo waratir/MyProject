@@ -3,12 +3,14 @@ public with sharing class SendEmailController {
     public static List<Map<String, String>> getObjectNames() {
         List<Map<String, String>> options = new List<Map<String, String>>();
 
-        List<String> standardObjects = new List<String>{'Contact', 'Account', 'Opportunity'};
+        List<String> standardObjects = new List<String>{
+                'Contact', 'Account', 'Opportunity'
+        };
 
         Map<String, SObjectType> objs = Schema.getGlobalDescribe();
         for (String key : objs.keySet()) {
             if (objs.get(key).getDescribe().isCustom() || standardObjects.contains(objs.get(key).getDescribe().getName())) {
-                if (checkTypeFields(objs.get(key).getDescribe().getName()) ) {
+                if (checkTypeFields(objs.get(key).getDescribe().getName())) {
                     options.add(new Map<String, String>{
                             'label' => objs.get(key).getDescribe().getName(), 'value' => key
                     });
@@ -33,7 +35,7 @@ public with sharing class SendEmailController {
         for (String item : fieldSet) {
             SObjectField fieldToken = fields.get(item);
             DescribeFieldResult selectedField = fieldToken.getDescribe();
-            if (selectedField.isAccessible() && selectedField.isCustom()) {
+            if (selectedField.isAccessible()) {
                 if (String.valueOf(selectedField.getType()) == 'Date' || String.valueOf(selectedField.getType()) == 'DateTime') {
                     options.add(new Map<String, String>{
                             'label' => selectedField.getName().capitalize(), 'value' => String.valueOf(selectedField.getType())
@@ -62,13 +64,18 @@ public with sharing class SendEmailController {
         insert record;
     }
 
+    @AuraEnabled
+    public static List<SObject> getRecordsForPreview(String fieldDate, String objectName, String criteria) {
+        return PreviewRecords.getRecordsForPreview(fieldDate, objectName, criteria);
+    }
+
     public static Boolean checkTypeFields(String objectName) {
         Map<String, SObjectField> fields = new Map<String, SObjectField>(Schema.getGlobalDescribe().get(objectName).getDescribe().fields.getMap());
         Set<String> fieldSet = fields.keySet();
         for (String item : fieldSet) {
             SObjectField fieldToken = fields.get(item);
             DescribeFieldResult selectedField = fieldToken.getDescribe();
-            if (selectedField.isAccessible() && selectedField.isCustom()) {
+            if (selectedField.isAccessible()) {
                 if (String.valueOf(selectedField.getType()) == 'Date' || String.valueOf(selectedField.getType()) == 'DateTime') {
                     return true;
                 }
